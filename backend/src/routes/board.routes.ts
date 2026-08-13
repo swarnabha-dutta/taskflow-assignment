@@ -1,0 +1,19 @@
+import { Router } from "express";
+import {
+    createBoard,
+    deleteBoard,
+    getBoardById,
+    getBoards,
+    updateBoard,
+} from "../controllers/board.controller.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+
+const router = Router();
+
+router.get("/", asyncHandler(getBoards));
+router.get("/:id", asyncHandler(getBoardById));
+router.post("/", asyncHandler(createBoard));
+router.patch("/:id", asyncHandler(updateBoard));
+router.delete("/:id", asyncHandler(deleteBoard));
+
+export default router;
