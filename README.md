@@ -1,13 +1,13 @@
 
 # TaskFlow
 
-A lightweight full-stack task board inspired by Trello, built as a take-home assignment.
+A Trello-like task management application built as a full-stack assignment.
 
 ## Tech Stack
 
 ### Backend
 - Node.js
-- Express
+- Express.js
 - TypeScript
 - Prisma ORM
 - SQLite
@@ -18,178 +18,125 @@ A lightweight full-stack task board inspired by Trello, built as a take-home ass
 ### Frontend
 - React
 - TypeScript
-- Vite
+- Kanban-style UI
 
----
+## Features
 
-## Backend
+- Board management
+- Column management
+- Task management
+- Task priority filtering
+- Move tasks between columns
+- Input validation
+- Database persistence
+- Seed data
+- REST API architecture
 
-The backend follows a layered architecture:
-
-```text
-Routes
-  ↓
-Controllers
-  ↓
-Services
-  ↓
-Repositories
-  ↓
-Prisma
-  ↓
-SQLite
-````
-
-### Backend Structure
-
-```text
-backend/
-├── src/
-│   ├── config/
-│   ├── controllers/
-│   ├── middlewares/
-│   ├── repositories/
-│   ├── routes/
-│   ├── services/
-│   ├── utils/
-│   ├── validators/
-│   ├── app.ts
-│   └── server.ts
-│
-├── prisma/
-│   ├── migrations/
-│   ├── schema.prisma
-│   └── seed.ts
-│
-└── tests/
-```
-
-### Current Backend Progress
-
-* Express + TypeScript setup
-* ESM configuration
-* Prisma 7 configuration
-* SQLite database
-* Relational database schema
-* Prisma migration
-* Prisma Client generation
-* Database connection verification
-* Seed data
-* Repository layer
-* Service layer
-
----
-
-## Database
-
-TaskFlow uses SQLite with Prisma.
-
-### Data Model
+## Database Structure
 
 ```text
 Board
-  │
-  └── Column
-        │
-        └── Task
-```
+ └── Columns
+      └── Tasks
+````
 
-* A Board contains multiple Columns.
-* A Column contains multiple Tasks.
-* A Task belongs to one Column.
-* Task priority: Low, Medium, High.
-* Task title is required.
-* Task description is optional.
-* Tasks store creation timestamps.
+## API Endpoints
 
-### Seed Data
-
-The development database is seeded with:
+### Boards
 
 ```text
-TaskFlow Board
-
-├── To Do
-│   ├── Setup project
-│   └── Design database
-│
-├── In Progress
-│   └── Build backend API
-│
-└── Done
-    └── Initialize Prisma
+GET    /api/boards
+GET    /api/boards/:id
+POST   /api/boards
+PATCH  /api/boards/:id
+DELETE /api/boards/:id
 ```
 
-Run:
+### Columns
+
+```text
+GET    /api/columns/board/:boardId
+GET    /api/columns/:id
+POST   /api/columns/board/:boardId
+PATCH  /api/columns/:id
+DELETE /api/columns/:id
+```
+
+### Tasks
+
+```text
+GET    /api/tasks
+GET    /api/tasks?priority=HIGH
+GET    /api/tasks/column/:columnId
+GET    /api/tasks/:id
+POST   /api/tasks
+PATCH  /api/tasks/:id
+PATCH  /api/tasks/:id/move
+DELETE /api/tasks/:id
+```
+
+## Backend Setup
+
+```bash
+cd backend
+npm install
+```
+
+Create `.env`:
+
+```env
+DATABASE_URL="file:./dev.db"
+```
+
+Run Prisma migration:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+Generate Prisma Client:
+
+```bash
+npx prisma generate
+```
+
+Seed the database:
 
 ```bash
 npm run db:seed
 ```
 
-### Database Queries
+Start the backend:
 
-The repository layer contains database-level queries for:
+```bash
+npm run dev
+```
 
-* Tasks belonging to a specific column
-* Tasks filtered by priority and ordered by newest first
+The API runs on:
 
----
+```text
+http://localhost:5000
+```
 
-## Frontend
+## Seed Data
 
-Frontend implementation is planned after the backend core is completed.
+The database is seeded with:
 
-Planned features:
+* TaskFlow Board
+* To Do
+* In Progress
+* Done
+* Sample tasks with different priorities
 
-* Board view
-* Columns and tasks
-* Create task
-* Edit task
-* Delete task
-* Move task between columns
-* Priority filtering
-* Backend error feedback
+## Current Progress
 
----
-
-## Development Status
-
-### Completed
-
-* [x] Project structure
-* [x] Backend setup
+* [x] Project setup
 * [x] Prisma + SQLite
 * [x] Database schema
 * [x] Migration
-* [x] Prisma Client
-* [x] Database connection
 * [x] Seed data
-* [x] Repository layer
-* [x] Service layer
-
-### In Progress
-
-* [ ] Validation
-* [ ] Error handling
-* [ ] Controllers
-* [ ] API routes
-* [ ] Backend tests
-* [ ] Frontend
-
----
-
-## Assignment Requirements
-
-The implementation follows the core TaskFlow requirements:
-
-* Persistent backend + database
-* Board → Column → Task relationship
-* Task CRUD
-* Task movement between columns
-* Priority filtering
-* Backend validation
-* Database queries
-* Seed data
-* Backend tests
+* [x] Board CRUD
+* [x] Column CRUD
+* [ ] Task API
 
 ---
