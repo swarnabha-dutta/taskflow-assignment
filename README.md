@@ -39,3 +39,28 @@ Prisma
 SQLite
 ```
 ---
+# Backend Structure
+
+```
+backend/
+├── src/
+│   ├── config/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── repositories/
+│   ├── routes/
+│   ├── services/
+│   ├── utils/
+│   ├── validators/
+│   ├── app.ts
+│   └── server.ts
+│
+├── prisma/
+│   ├── migrations/
+│   ├── schema.prisma
+│   └── seed.ts
+│
+└── tests/
+
+
+```
