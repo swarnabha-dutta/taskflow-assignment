@@ -1,5 +1,5 @@
 import { Priority } from "../generated/prisma/client.js";
-import { taskRepository } from "../respositories/task.repository.js"
+import { taskRepository } from "../respositories/task.repository.js";
 import { columnRepository } from "../respositories/column.repository.js";
 import { AppError } from "../utils/AppError.js";
 
@@ -41,13 +41,13 @@ export const taskService = {
         const title = data.title.trim();
 
         if (!title) {
-            throw new Error("Task title is required");
+            throw new AppError("Task title is required", 400);
         }
 
         const column = await columnRepository.findById(data.columnId);
 
         if (!column) {
-            throw new Error("Column not found");
+            throw new AppError("Column not found", 404);
         }
 
         return taskRepository.create({
@@ -68,19 +68,29 @@ export const taskService = {
     ) {
         await this.getTaskById(id);
 
-        if (data.title !== undefined) {
-            data.title = data.title.trim();
+        const updateData = {
+            ...(data.title !== undefined && {
+                title: data.title.trim(),
+            }),
+            ...(data.description !== undefined && {
+                description: data.description.trim(),
+            }),
+            ...(data.priority !== undefined && {
+                priority: data.priority,
+            }),
+        };
 
-            if (!data.title) {
-                throw new Error("Task title cannot be empty");
-            }
+        if (
+            updateData.title !== undefined &&
+            !updateData.title
+        ) {
+            throw new AppError(
+                "Task title cannot be empty",
+                400,
+            );
         }
 
-        if (data.description !== undefined) {
-            data.description = data.description.trim();
-        }
-
-        return taskRepository.update(id, data);
+        return taskRepository.update(id, updateData);
     },
 
     async moveTask(id: string, targetColumnId: string) {
@@ -90,7 +100,10 @@ export const taskService = {
             await columnRepository.findById(targetColumnId);
 
         if (!targetColumn) {
-            throw new AppError("Target column not found", 404);
+            throw new AppError(
+                "Target column not found",
+                404,
+            );
         }
 
         return taskRepository.move(id, targetColumnId);
