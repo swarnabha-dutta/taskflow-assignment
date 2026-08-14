@@ -1,0 +1,12 @@
+import { Router } from "express";
+import { createTask, deleteTask, getTaskById, getTasks, getTasksByColumn, moveTask, updateTask, } from "../controllers/task.controller.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+const router = Router();
+router.get("/", asyncHandler(getTasks));
+router.get("/column/:columnId", asyncHandler(getTasksByColumn));
+router.get("/:id", asyncHandler(getTaskById));
+router.post("/", asyncHandler(createTask));
+router.patch("/:id", asyncHandler(updateTask));
+router.patch("/:id/move", asyncHandler(moveTask));
+router.delete("/:id", asyncHandler(deleteTask));
+export default router;

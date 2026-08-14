@@ -27,7 +27,7 @@ export const updateTaskSchema = z
         title: z
             .string()
             .trim()
-            .min(1, "Task title cannot be empty")
+            .min(1)
             .optional(),
 
         description: z

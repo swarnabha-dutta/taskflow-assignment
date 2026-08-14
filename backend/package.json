@@ -10,11 +10,11 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/src/server.js",
-    "test:watch": "vitest",
-    "db:seed": "tsx prisma/seed.ts",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
