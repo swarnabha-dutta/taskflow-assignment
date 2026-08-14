@@ -26,11 +26,11 @@ export const taskService = {
     async createTask(data) {
         const title = data.title.trim();
         if (!title) {
-            throw new Error("Task title is required");
+            throw new AppError("Task title is required", 400);
         }
         const column = await columnRepository.findById(data.columnId);
         if (!column) {
-            throw new Error("Column not found");
+            throw new AppError("Column not found", 404);
         }
         return taskRepository.create({
             title,
@@ -44,7 +44,7 @@ export const taskService = {
         if (data.title !== undefined) {
             data.title = data.title.trim();
             if (!data.title) {
-                throw new Error("Task title cannot be empty");
+                throw new AppError("Task title cannot be empty", 400);
             }
         }
         if (data.description !== undefined) {

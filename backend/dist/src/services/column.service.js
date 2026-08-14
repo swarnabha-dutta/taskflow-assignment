@@ -1,28 +1,32 @@
 import { columnRepository } from "../respositories/column.repository.js";
 import { boardRepository } from "../respositories/board.repository.js";
+import { AppError } from "../utils/AppError.js";
 export const columnService = {
     async getColumnsByBoardId(boardId) {
-        await boardRepository.findById(boardId);
+        const board = await boardRepository.findById(boardId);
+        if (!board) {
+            throw new AppError("Board not found", 404);
+        }
         return columnRepository.findByBoardId(boardId);
     },
     async getColumnById(id) {
         const column = await columnRepository.findById(id);
         if (!column) {
-            throw new Error("Column not found");
+            throw new AppError("Column not found", 404);
         }
         return column;
     },
     async createColumn(boardId, name, position) {
         const board = await boardRepository.findById(boardId);
         if (!board) {
-            throw new Error("Board not found");
+            throw new AppError("Board not found", 404);
         }
         const trimmedName = name.trim();
         if (!trimmedName) {
-            throw new Error("Column name is required");
+            throw new AppError("Column name is required", 400);
         }
         if (!Number.isInteger(position) || position < 0) {
-            throw new Error("Column position must be a non-negative integer");
+            throw new AppError("Column position must be a non-negative integer", 400);
         }
         return columnRepository.create(boardId, trimmedName, position);
     },
@@ -31,12 +35,12 @@ export const columnService = {
         if (data.name !== undefined) {
             data.name = data.name.trim();
             if (!data.name) {
-                throw new Error("Column name cannot be empty");
+                throw new AppError("Column name cannot be empty", 400);
             }
         }
         if (data.position !== undefined &&
             (!Number.isInteger(data.position) || data.position < 0)) {
-            throw new Error("Column position must be a non-negative integer");
+            throw new AppError("Column position must be a non-negative integer", 400);
         }
         return columnRepository.update(id, data);
     },

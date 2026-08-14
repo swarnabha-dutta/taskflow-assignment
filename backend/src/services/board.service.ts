@@ -1,4 +1,4 @@
-import { boardRepository } from "../respositories/board.repository.js"
+import { boardRepository } from "../respositories/board.repository.js";
 import { AppError } from "../utils/AppError.js";
 
 export const boardService = {
@@ -10,7 +10,7 @@ export const boardService = {
         const board = await boardRepository.findById(id);
 
         if (!board) {
-            throw new AppError("Task not found", 404);
+            throw new AppError("Board not found", 404);
         }
 
         return board;
@@ -20,7 +20,7 @@ export const boardService = {
         const trimmedName = name.trim();
 
         if (!trimmedName) {
-            throw new Error("Board name is required");
+            throw new AppError("Board name is required", 400);
         }
 
         return boardRepository.create(trimmedName);
@@ -30,7 +30,7 @@ export const boardService = {
         const trimmedName = name.trim();
 
         if (!trimmedName) {
-            throw new Error("Board name is required");
+            throw new AppError("Board name is required", 400);
         }
 
         await this.getBoardById(id);

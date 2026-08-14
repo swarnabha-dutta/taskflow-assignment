@@ -7,21 +7,21 @@ export const boardService = {
     async getBoardById(id) {
         const board = await boardRepository.findById(id);
         if (!board) {
-            throw new AppError("Task not found", 404);
+            throw new AppError("Board not found", 404);
         }
         return board;
     },
     async createBoard(name) {
         const trimmedName = name.trim();
         if (!trimmedName) {
-            throw new Error("Board name is required");
+            throw new AppError("Board name is required", 400);
         }
         return boardRepository.create(trimmedName);
     },
     async updateBoard(id, name) {
         const trimmedName = name.trim();
         if (!trimmedName) {
-            throw new Error("Board name is required");
+            throw new AppError("Board name is required", 400);
         }
         await this.getBoardById(id);
         return boardRepository.update(id, trimmedName);
