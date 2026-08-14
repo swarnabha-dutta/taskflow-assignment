@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1786720397908" clover="3.2.0">
+  <project timestamp="1786720397908" name="All files">
+    <metrics statements="117" coveredstatements="117" conditionals="44" coveredconditionals="43" methods="29" coveredmethods="29" elements="190" coveredelements="189" complexity="0" loc="117" ncloc="117" packages="3" files="7" classes="7"/>
+    <package name="src">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="App.css" path="D:\taskflow-assignment\frontend\src\App.css">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="App.tsx" path="D:\taskflow-assignment\frontend\src\App.tsx">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.api">
+      <metrics statements="21" coveredstatements="21" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
+      <file name="taskflowApi.ts" path="D:\taskflow-assignment\frontend\src\api\taskflowApi.ts">
+        <metrics statements="21" coveredstatements="21" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="80" count="1" type="stmt"/>
+        <line num="83" count="1" type="stmt"/>
+        <line num="86" count="1" type="stmt"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components">
+      <metrics statements="95" coveredstatements="95" conditionals="44" coveredconditionals="43" methods="21" coveredmethods="21"/>
+      <file name="Board.tsx" path="D:\taskflow-assignment\frontend\src\components\Board.tsx">
+        <metrics statements="40" coveredstatements="40" conditionals="10" coveredconditionals="9" methods="6" coveredmethods="6"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="19" count="9" type="stmt"/>
+        <line num="22" count="9" type="stmt"/>
+        <line num="25" count="9" type="stmt"/>
+        <line num="28" count="9" type="stmt"/>
+        <line num="31" count="9" type="stmt"/>
+        <line num="33" count="9" type="stmt"/>
+        <line num="35" count="5" type="stmt"/>
+        <line num="36" count="5" type="stmt"/>
+        <line num="37" count="5" type="stmt"/>
+        <line num="40" count="5" type="stmt"/>
+        <line num="42" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="50" count="2" type="stmt"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="59" count="2" type="stmt"/>
+        <line num="62" count="2" type="stmt"/>
+        <line num="66" count="5" type="stmt"/>
+        <line num="70" count="5" type="stmt"/>
+        <line num="83" count="2" type="stmt"/>
+        <line num="85" count="2" type="stmt"/>
+        <line num="90" count="5" type="stmt"/>
+        <line num="95" count="2" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="103" count="4" type="stmt"/>
+        <line num="109" count="9" type="stmt"/>
+        <line num="110" count="5" type="stmt"/>
+        <line num="113" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="114" count="5" type="stmt"/>
+        <line num="121" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="129" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="130" count="1" type="stmt"/>
+        <line num="137" count="2" type="stmt"/>
+        <line num="145" count="5" type="stmt"/>
+      </file>
+      <file name="Column.tsx" path="D:\taskflow-assignment\frontend\src\components\Column.tsx">
+        <metrics statements="8" coveredstatements="8" conditionals="4" coveredconditionals="4" methods="5" coveredmethods="5"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="23" count="14" type="stmt"/>
+        <line num="25" count="14" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="49" count="3" type="stmt"/>
+        <line num="63" count="5" type="stmt"/>
+      </file>
+      <file name="TaskCard.tsx" path="D:\taskflow-assignment\frontend\src\components\TaskCard.tsx">
+        <metrics statements="21" coveredstatements="21" conditionals="8" coveredconditionals="8" methods="5" coveredmethods="5"/>
+        <line num="14" count="2" type="stmt"/>
+        <line num="19" count="20" type="stmt"/>
+        <line num="22" count="20" type="stmt"/>
+        <line num="24" count="20" type="stmt"/>
+        <line num="25" count="4" type="stmt"/>
+        <line num="29" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="33" count="3" type="stmt"/>
+        <line num="34" count="3" type="stmt"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="46" count="3" type="stmt"/>
+        <line num="50" count="20" type="cond" truecount="2" falsecount="0"/>
+        <line num="51" count="3" type="stmt"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="68" count="17" type="stmt"/>
+        <line num="88" count="3" type="stmt"/>
+      </file>
+      <file name="TaskForm.tsx" path="D:\taskflow-assignment\frontend\src\components\TaskForm.tsx">
+        <metrics statements="26" coveredstatements="26" conditionals="22" coveredconditionals="22" methods="5" coveredmethods="5"/>
+        <line num="20" count="2" type="stmt"/>
+        <line num="26" count="84" type="stmt"/>
+        <line num="28" count="84" type="stmt"/>
+        <line num="32" count="84" type="stmt"/>
+        <line num="37" count="84" type="stmt"/>
+        <line num="41" count="84" type="stmt"/>
+        <line num="42" count="84" type="stmt"/>
+        <line num="44" count="84" type="stmt"/>
+        <line num="47" count="6" type="stmt"/>
+        <line num="49" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="54" count="5" type="stmt"/>
+        <line num="55" count="5" type="stmt"/>
+        <line num="56" count="5" type="stmt"/>
+        <line num="58" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="59" count="2" type="stmt"/>
+        <line num="66" count="3" type="stmt"/>
+        <line num="75" count="3" type="stmt"/>
+        <line num="77" count="2" type="stmt"/>
+        <line num="79" count="2" type="stmt"/>
+        <line num="85" count="5" type="stmt"/>
+        <line num="89" count="84" type="stmt"/>
+        <line num="99" count="41" type="stmt"/>
+        <line num="108" count="20" type="stmt"/>
+        <line num="117" count="2" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
