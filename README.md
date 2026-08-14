@@ -710,11 +710,3 @@ Current remaining work is primarily:
 The project is currently in the final verification and polish stage.
 
 ---
-
-## License
-
-This project was created as a full-stack development assignment.
-
-````
-
-### একটা impo
