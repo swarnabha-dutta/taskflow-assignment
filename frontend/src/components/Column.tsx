@@ -10,12 +10,14 @@ import TaskForm from "./TaskForm";
 
 interface ColumnProps {
     column: ColumnType;
+    columns: ColumnType[];
     tasks: Task[];
     onUpdated: () => void;
 }
 
 const Column = ({
     column,
+    columns,
     tasks,
     onUpdated,
 }: ColumnProps) => {
@@ -63,6 +65,7 @@ const Column = ({
                         <TaskCard
                             key={task.id}
                             task={task}
+                            columns={columns}
                             onUpdated={onUpdated}
                         />
                     ))

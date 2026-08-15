@@ -1,12 +1,27 @@
-import { render, screen } from "@testing-library/react";
+import {
+    render,
+    screen,
+    waitFor,
+} from "@testing-library/react";
+
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import {
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi,
+} from "vitest";
 
 import TaskCard from "./TaskCard";
 
 import { deleteTask } from "../api/taskflowApi";
 
-import type { Task } from "../types/taskflow";
+import type {
+    Column,
+    Task,
+} from "../types/taskflow";
 
 vi.mock("../api/taskflowApi", () => ({
     deleteTask: vi.fn(),
@@ -26,10 +41,15 @@ vi.mock("./TaskForm", () => ({
     }) => (
         <div data-testid="task-form">
             <div>Task Form</div>
-            <div>Column: {columnId}</div>
+
+            <div>
+                Column: {columnId}
+            </div>
 
             {task && (
-                <div>Editing: {task.title}</div>
+                <div>
+                    Editing: {task.title}
+                </div>
             )}
 
             <button
@@ -53,24 +73,68 @@ describe("TaskCard", () => {
     const task: Task = {
         id: "task-1",
         title: "Build frontend",
-        description: "Build the TaskFlow frontend",
+        description:
+            "Build the TaskFlow frontend",
         priority: "HIGH",
         columnId: "column-1",
-        createdAt: "2026-08-14T00:00:00.000Z",
-        updatedAt: "2026-08-14T00:00:00.000Z",
+        createdAt:
+            "2026-08-14T00:00:00.000Z",
+        updatedAt:
+            "2026-08-14T00:00:00.000Z",
     };
+
+    const columns: Column[] = [
+        {
+            id: "column-1",
+            name: "To Do",
+            position: 0,
+            boardId: "board-1",
+            createdAt:
+                "2026-08-14T00:00:00.000Z",
+            updatedAt:
+                "2026-08-14T00:00:00.000Z",
+        },
+        {
+            id: "column-2",
+            name: "In Progress",
+            position: 1,
+            boardId: "board-1",
+            createdAt:
+                "2026-08-14T00:00:00.000Z",
+            updatedAt:
+                "2026-08-14T00:00:00.000Z",
+        },
+        {
+            id: "column-3",
+            name: "Done",
+            position: 2,
+            boardId: "board-1",
+            createdAt:
+                "2026-08-14T00:00:00.000Z",
+            updatedAt:
+                "2026-08-14T00:00:00.000Z",
+        },
+    ];
 
     beforeEach(() => {
         vi.clearAllMocks();
 
-        vi.spyOn(window, "confirm").mockReturnValue(true);
-        vi.spyOn(window, "alert").mockImplementation(() => { });
+        vi.spyOn(
+            window,
+            "confirm",
+        ).mockReturnValue(true);
+
+        vi.spyOn(
+            window,
+            "alert",
+        ).mockImplementation(() => { });
     });
 
     it("renders task information", () => {
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={vi.fn()}
             />,
         );
@@ -82,7 +146,9 @@ describe("TaskCard", () => {
         ).toBeInTheDocument();
 
         expect(
-            screen.getByText("Build the TaskFlow frontend"),
+            screen.getByText(
+                "Build the TaskFlow frontend",
+            ),
         ).toBeInTheDocument();
 
         expect(
@@ -100,6 +166,10 @@ describe("TaskCard", () => {
                 name: "Delete",
             }),
         ).toBeInTheDocument();
+
+        expect(
+            screen.getByRole("combobox"),
+        ).toBeInTheDocument();
     });
 
     it("does not render description when description is empty", () => {
@@ -111,6 +181,7 @@ describe("TaskCard", () => {
         render(
             <TaskCard
                 task={taskWithoutDescription}
+                columns={columns}
                 onUpdated={vi.fn()}
             />,
         );
@@ -128,6 +199,7 @@ describe("TaskCard", () => {
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={vi.fn()}
             />,
         );
@@ -143,11 +215,15 @@ describe("TaskCard", () => {
         ).toBeInTheDocument();
 
         expect(
-            screen.getByText("Editing: Build frontend"),
+            screen.getByText(
+                "Editing: Build frontend",
+            ),
         ).toBeInTheDocument();
 
         expect(
-            screen.getByText("Column: column-1"),
+            screen.getByText(
+                "Column: column-1",
+            ),
         ).toBeInTheDocument();
     });
 
@@ -157,6 +233,7 @@ describe("TaskCard", () => {
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={vi.fn()}
             />,
         );
@@ -186,11 +263,13 @@ describe("TaskCard", () => {
 
     it("calls onUpdated after successful edit", async () => {
         const user = userEvent.setup();
+
         const onUpdated = vi.fn();
 
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={onUpdated}
             />,
         );
@@ -207,18 +286,24 @@ describe("TaskCard", () => {
             }),
         );
 
-        expect(onUpdated).toHaveBeenCalledTimes(1);
+        expect(
+            onUpdated,
+        ).toHaveBeenCalledTimes(1);
     });
 
     it("deletes task after confirmation", async () => {
         const user = userEvent.setup();
+
         const onUpdated = vi.fn();
 
-        vi.mocked(deleteTask).mockResolvedValue(undefined);
+        vi.mocked(deleteTask).mockResolvedValue(
+            undefined,
+        );
 
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={onUpdated}
             />,
         );
@@ -229,25 +314,36 @@ describe("TaskCard", () => {
             }),
         );
 
-        expect(window.confirm).toHaveBeenCalledWith(
+        expect(
+            window.confirm,
+        ).toHaveBeenCalledWith(
             'Delete "Build frontend"?',
         );
 
-        expect(deleteTask).toHaveBeenCalledWith(
+        expect(
+            deleteTask,
+        ).toHaveBeenCalledWith(
             "task-1",
         );
 
-        expect(onUpdated).toHaveBeenCalledTimes(1);
+        await waitFor(() => {
+            expect(
+                onUpdated,
+            ).toHaveBeenCalledTimes(1);
+        });
     });
 
     it("does not delete task when confirmation is cancelled", async () => {
         const user = userEvent.setup();
 
-        vi.mocked(window.confirm).mockReturnValue(false);
+        vi.mocked(
+            window.confirm,
+        ).mockReturnValue(false);
 
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={vi.fn()}
             />,
         );
@@ -258,7 +354,15 @@ describe("TaskCard", () => {
             }),
         );
 
-        expect(deleteTask).not.toHaveBeenCalled();
+        expect(
+            window.confirm,
+        ).toHaveBeenCalledWith(
+            'Delete "Build frontend"?',
+        );
+
+        expect(
+            deleteTask,
+        ).not.toHaveBeenCalled();
     });
 
     it("shows deleting state while delete request is pending", async () => {
@@ -278,6 +382,7 @@ describe("TaskCard", () => {
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={vi.fn()}
             />,
         );
@@ -294,19 +399,38 @@ describe("TaskCard", () => {
             }),
         ).toBeDisabled();
 
+        expect(
+            screen.getByRole("button", {
+                name: "Deleting...",
+            }),
+        ).toBeInTheDocument();
+
         resolveDelete?.();
+
+        await waitFor(() => {
+            expect(
+                screen.getByRole("button", {
+                    name: "Delete",
+                }),
+            ).toBeInTheDocument();
+        });
     });
 
     it("shows alert when delete fails", async () => {
         const user = userEvent.setup();
 
-        const error = new Error("Delete failed");
+        const error = new Error(
+            "Delete failed",
+        );
 
-        vi.mocked(deleteTask).mockRejectedValue(error);
+        vi.mocked(
+            deleteTask,
+        ).mockRejectedValue(error);
 
         render(
             <TaskCard
                 task={task}
+                columns={columns}
                 onUpdated={vi.fn()}
             />,
         );
@@ -317,8 +441,12 @@ describe("TaskCard", () => {
             }),
         );
 
-        expect(window.alert).toHaveBeenCalledWith(
-            "Failed to delete task.",
-        );
+        await waitFor(() => {
+            expect(
+                window.alert,
+            ).toHaveBeenCalledWith(
+                "Failed to delete task.",
+            );
+        });
     });
 });

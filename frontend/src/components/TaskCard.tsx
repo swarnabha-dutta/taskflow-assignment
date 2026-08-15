@@ -1,24 +1,35 @@
 import { useState } from "react";
 
-import { deleteTask } from "../api/taskflowApi";
+import {
+    deleteTask,
+    moveTask,
+} from "../api/taskflowApi";
 
-import type { Task } from "../types/taskflow";
+import type {
+    Column as ColumnType,
+    Task,
+} from "../types/taskflow";
 
 import TaskForm from "./TaskForm";
 
 interface TaskCardProps {
     task: Task;
+    columns: ColumnType[];
     onUpdated: () => void;
 }
 
 const TaskCard = ({
     task,
+    columns,
     onUpdated,
 }: TaskCardProps) => {
     const [editing, setEditing] =
         useState(false);
 
     const [deleting, setDeleting] =
+        useState(false);
+
+    const [moving, setMoving] =
         useState(false);
 
     const handleDelete = async () => {
@@ -44,6 +55,40 @@ const TaskCard = ({
             );
         } finally {
             setDeleting(false);
+        }
+    };
+
+    const handleMove = async (
+        event: React.ChangeEvent<HTMLSelectElement>,
+    ) => {
+        const newColumnId =
+            event.target.value;
+
+        if (!newColumnId) {
+            return;
+        }
+
+        if (newColumnId === task.columnId) {
+            return;
+        }
+
+        try {
+            setMoving(true);
+
+            await moveTask(
+                task.id,
+                newColumnId,
+            );
+
+            onUpdated();
+        } catch (error) {
+            console.error(error);
+
+            window.alert(
+                "Failed to move task.",
+            );
+        } finally {
+            setMoving(false);
         }
     };
 
@@ -100,6 +145,34 @@ const TaskCard = ({
                         ? "Deleting..."
                         : "Delete"}
                 </button>
+
+                <select
+                    value=""
+                    onChange={handleMove}
+                    disabled={moving}
+                    aria-label={`Move ${task.title}`}
+                >
+                    <option value="">
+                        {moving
+                            ? "Moving..."
+                            : "Move to..."}
+                    </option>
+
+                    {columns.map(
+                        (column) => (
+                            <option
+                                key={column.id}
+                                value={column.id}
+                                disabled={
+                                    column.id ===
+                                    task.columnId
+                                }
+                            >
+                                {column.name}
+                            </option>
+                        ),
+                    )}
+                </select>
             </div>
         </div>
     );

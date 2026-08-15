@@ -145,6 +145,7 @@ const Board = () => {
                     <Column
                         key={column.id}
                         column={column}
+                        columns={columns}
                         tasks={
                             tasks[column.id] ??
                             []
