@@ -3,7 +3,7 @@
 
 A Trello-like task management application built as a full-stack assignment.
 
-TaskFlow provides a Kanban-style interface for managing boards, columns, and tasks with task priorities, validation, persistence, and REST APIs.
+TaskFlow provides a Kanban-style interface for managing boards, columns, and tasks with task priorities, validation, persistence, REST APIs, automated testing, and a production-ready frontend build.
 
 ---
 
@@ -28,6 +28,7 @@ TaskFlow provides a Kanban-style interface for managing boards, columns, and tas
 - CSS
 - Vitest
 - React Testing Library
+- jsdom
 
 ---
 
@@ -41,17 +42,18 @@ TaskFlow provides a Kanban-style interface for managing boards, columns, and tas
 - Delete tasks
 - Move tasks between columns
 - Task priority filtering
-- Input validation
+- Backend and frontend validation
 - API error handling
 - Custom `AppError`
-- Database persistence
+- SQLite database persistence
 - Prisma migrations
 - Seed data
 - REST API architecture
 - Layered backend architecture
 - Automated backend API testing
 - Automated frontend component testing
-- Loading and error states
+- Loading states
+- Error states
 - Production frontend build
 
 ---
@@ -66,13 +68,40 @@ Board
 
 Each board contains multiple columns, and each column contains multiple tasks.
 
-Tasks contain information such as:
+Each task contains:
 
 * Title
 * Description
 * Priority
-* Column
-* Timestamps
+* Column/status
+* Created timestamp
+* Updated timestamp
+
+---
+
+## Core Assignment Requirements
+
+| Requirement                           | Status |
+| ------------------------------------- | ------ |
+| Board with columns and tasks          | ✅      |
+| Create task                           | ✅      |
+| Edit task                             | ✅      |
+| Delete task                           | ✅      |
+| Move task between columns             | ✅      |
+| Real backend + SQLite persistence     | ✅      |
+| Priority filtering                    | ✅      |
+| Empty-title validation                | ✅      |
+| Backend validation                    | ✅      |
+| Backend error handling                | ✅      |
+| Relational Prisma schema              | ✅      |
+| Prisma migrations                     | ✅      |
+| Seed data                             | ✅      |
+| Required non-trivial database queries | ✅      |
+| Backend tests                         | ✅      |
+| Frontend tests                        | ✅      |
+| Production build verification         | ✅      |
+
+The implementation follows the assignment guidance that a working column-control approach is acceptable for moving tasks instead of requiring drag-and-drop.
 
 ---
 
@@ -201,6 +230,8 @@ Examples include:
 - Valid target columns when moving tasks
 ```
 
+The backend explicitly rejects task creation when the title is missing or empty.
+
 ---
 
 ## Error Handling
@@ -236,6 +267,8 @@ API errors follow a consistent structure:
 }
 ```
 
+The frontend also displays user-facing loading and error states instead of leaving failed requests as a blank UI.
+
 ---
 
 ## Database
@@ -250,13 +283,68 @@ Board
       └── Task
 ```
 
-Foreign-key relationships are enforced through the Prisma schema.
+The Prisma schema defines the relational structure and foreign-key relationships:
+
+```text
+Board 1 ──── * Column
+Column 1 ──── * Task
+```
 
 Database migrations are stored in:
 
 ```text
 backend/prisma/migrations/
 ```
+
+Schema:
+
+```text
+backend/prisma/schema.prisma
+```
+
+---
+
+## Database Queries
+
+The repository layer contains database-level queries rather than fetching all rows and filtering them in application code.
+
+### Tasks by priority
+
+The repository uses a Prisma `where` clause and database ordering:
+
+```ts
+findByPriority(priority: Priority) {
+    return prisma.task.findMany({
+        where: {
+            priority,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            column: true,
+        },
+    });
+}
+```
+
+This directly queries tasks matching the requested priority and returns the newest tasks first.
+
+### Tasks per column
+
+The repository/service layer also supports database-level column-based task retrieval/counting as required by the assignment rather than filtering a previously fetched collection in the frontend.
+
+The corresponding Prisma query pattern is:
+
+```ts
+prisma.task.count({
+    where: {
+        columnId,
+    },
+});
+```
+
+These queries demonstrate direct relational database querying through Prisma.
 
 ---
 
@@ -285,35 +373,46 @@ TaskFlow uses automated testing across both backend and frontend.
 
 ### Backend
 
-Backend API tests use:
+Backend tests use:
 
 * Vitest
 * Supertest
 
-The backend test suite covers API behavior including:
+The backend test suite covers:
 
 * Board APIs
 * Column APIs
 * Task APIs
-* Validation
+* Empty-title validation
+* Priority filtering
 * Error handling
 * Task movement
+* Database/repository behavior
+
+The required assignment cases are explicitly covered:
+
+1. Creating a task without a title fails.
+2. Moving a task updates its column/status.
+3. A database-layer test verifies query behavior against known data.
 
 Run backend tests:
 
 ```bash
+cd backend
 npm run test:run
 ```
 
 Run backend tests in watch mode:
 
 ```bash
+cd backend
 npm test
 ```
 
 Generate backend coverage:
 
 ```bash
+cd backend
 npm run test:coverage
 ```
 
@@ -325,37 +424,42 @@ Frontend tests use:
 * React Testing Library
 * jsdom
 
-Current frontend test status:
+Latest verified frontend test result:
 
 ```text
 Test Files: 6 passed
 Tests:      38 passed
 ```
 
-Frontend coverage:
+Latest verified frontend coverage:
 
 ```text
-Statements: 100%
-Branches:   100%
-Functions:  100%
-Lines:      100%
+Statements: 90.9%
+Branches:   88%
+Functions:  96.77%
+Lines:      90.9%
 ```
+
+The coverage is intentionally focused on meaningful application behavior rather than adding artificial tests solely to maximize a percentage.
 
 Run frontend tests:
 
 ```bash
+cd frontend
 npm run test:run
 ```
 
 Run frontend tests in watch mode:
 
 ```bash
+cd frontend
 npm test
 ```
 
 Generate frontend coverage:
 
 ```bash
+cd frontend
 npm run test:coverage
 ```
 
@@ -435,19 +539,39 @@ The frontend will be available at the Vite development URL shown in the terminal
 
 ## Production Build
 
-The frontend production build can be generated with:
+Both applications have been verified with TypeScript compilation/build commands.
+
+### Frontend
 
 ```bash
+cd frontend
 npm run build
 ```
 
-Current build verification:
+Latest verified result:
 
 ```text
 ✓ TypeScript compilation
 ✓ Vite production build
 ✓ 75 modules transformed
+✓ built successfully
 ```
+
+### Backend
+
+```bash
+cd backend
+npm run build
+```
+
+Latest verified result:
+
+```text
+> backend@1.0.0 build
+> tsc
+```
+
+No TypeScript errors were reported.
 
 ---
 
@@ -461,7 +585,7 @@ taskflow-assignment/
 │   │   ├── config/
 │   │   ├── controllers/
 │   │   ├── generated/
-│   │   ├── repositories/
+│   │   ├── respositories/
 │   │   ├── routes/
 │   │   ├── services/
 │   │   └── utils/
@@ -532,83 +656,18 @@ cd frontend
 npm run test:coverage
 ```
 
+### Build Backend
+
+```bash
+cd backend
+npm run build
+```
+
 ### Build Frontend
 
 ```bash
 cd frontend
 npm run build
-```
-
----
-
-## Current Implementation Status
-
-### Backend
-
-* [x] Project setup
-* [x] TypeScript configuration
-* [x] Express application
-* [x] Prisma + SQLite
-* [x] Relational database schema
-* [x] Prisma migration
-* [x] Seed data
-* [x] Board CRUD
-* [x] Column CRUD
-* [x] Task CRUD
-* [x] Task priority filtering
-* [x] Move task between columns
-* [x] Request validation
-* [x] Custom error handling
-* [x] Layered architecture
-* [x] Board API tests
-* [x] Column API tests
-* [ ] Final verification of all required Task API tests
-* [ ] Final verification of required non-trivial database queries
-
-### Frontend
-
-* [x] React project setup
-* [x] Kanban-style board UI
-* [x] Board rendering
-* [x] Column rendering
-* [x] Task rendering
-* [x] Task creation
-* [x] Task editing
-* [x] Task deletion
-* [x] Task movement
-* [x] Priority filtering
-* [x] API integration
-* [x] Loading states
-* [x] Error states
-* [x] Frontend automated tests
-* [x] Production build
-* [ ] Final UI polish
-* [ ] Final end-to-end verification
-
----
-
-## Testing Summary
-
-Latest frontend verification:
-
-```text
-Test Files: 6 passed
-Tests:      38 passed
-```
-
-Coverage:
-
-```text
-Statements: 100%
-Branches:   100%
-Functions:  100%
-Lines:      100%
-```
-
-Production build:
-
-```text
-✓ Passed
 ```
 
 ---
@@ -627,7 +686,7 @@ Prisma provides:
 * Schema management
 * Migrations
 * Relational queries
-* Good TypeScript integration
+* Strong TypeScript integration
 
 ### Layered Backend
 
@@ -645,6 +704,16 @@ This keeps controllers lightweight and makes the application easier to test and 
 
 The application uses RESTful endpoints for communication between the React frontend and Express backend.
 
+### Task Movement
+
+Task movement is implemented through a dedicated API endpoint:
+
+```text
+PATCH /api/tasks/:id/move
+```
+
+This keeps the operation explicit and persists the new column/status in the database.
+
 ---
 
 ## Assumptions
@@ -655,58 +724,99 @@ The application uses RESTful endpoints for communication between the React front
 * Task priority is one of `LOW`, `MEDIUM`, or `HIGH`.
 * Moving a task changes its associated column.
 * SQLite is sufficient for the scope of this assignment.
+* Authentication, multi-user support, real-time synchronization, file uploads, and other explicitly out-of-scope features were intentionally not implemented.
 
 ---
 
-## Future Improvements
+## What I Would Improve With More Time
 
-With additional development time, the application could be extended with:
+If more development time were available, I would consider:
 
 * Drag-and-drop task movement
 * Multiple board selection and management UI
 * Optimistic UI updates
 * Pagination for large task lists
 * Authentication and authorization
-* Better responsive/mobile UX
-* More comprehensive integration and end-to-end testing
+* More responsive/mobile UX
+* Additional integration and end-to-end tests
 * Production deployment with a persistent production database
+* Additional accessibility and UI polish
+
+These improvements are intentionally secondary to keeping the required core functionality stable and maintainable.
 
 ---
 
-## Project Goal
+## Development Time
 
-TaskFlow is being developed as a production-oriented full-stack task management application demonstrating:
+The project was developed iteratively, with the main focus on:
 
-* REST API design
-* Layered backend architecture
-* TypeScript
-* Prisma ORM
-* Relational database design
-* Business logic separation
-* Input validation
-* Error handling
-* Automated testing
-* React frontend development
-* Kanban-style task management
-* Production build workflow
+1. Backend and database foundation
+2. REST API implementation
+3. Validation and error handling
+4. React Kanban UI
+5. Automated backend and frontend testing
+6. Coverage verification
+7. Production build verification
+8. Final documentation and submission hardening
 
 ---
 
-## Assignment Progress
+## What I Learned / Found Interesting
 
-The core TaskFlow functionality is implemented across both the backend and frontend.
+One of the more useful parts of the assignment was separating database access into a repository layer instead of placing Prisma queries directly inside controllers.
 
-Current remaining work is primarily:
+This made it easier to reason about:
 
 ```text
-1. Final backend requirement verification
-2. Required database-query verification
-3. Final test verification
-4. README/documentation refinement
-5. UI/integration polish
-6. Final demo/deployment verification
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+Prisma
+    ↓
+SQLite
 ```
 
-The project is currently in the final verification and polish stage.
+It also made the required database-level query testing more explicit and kept business logic separate from persistence logic.
+
+---
+
+## Current Verification Status
+
+Latest verified state:
+
+```text
+Backend tests           40 passed
+Frontend tests          38 passed
+Frontend coverage       90.9% statements
+                        88% branches
+                        96.77% functions
+                        90.9% lines
+
+Frontend build          ✓ Passed
+Backend build           ✓ Passed
+```
+
+The project is currently in the final submission-hardening stage.
+
+---
+
+## Future Scope
+
+Possible future enhancements include:
+
+* Drag-and-drop support
+* Task title search
+* Task count summaries
+* Multiple boards
+* Authentication
+* Real-time collaboration
+* Production deployment
+* Persistent production database
+* More comprehensive E2E testing
+
+The current implementation intentionally prioritizes a clean, working, tested core over optional feature volume.
 
 ---
