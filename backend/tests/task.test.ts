@@ -11,6 +11,7 @@ import request from "supertest";
 import app from "../src/app.js";
 import { prisma } from "../src/config/prisma.js";
 import { Priority } from "../src/generated/prisma/client.js";
+import { taskRepository } from "../src/respositories/task.repository.js";
 
 describe("Task API", () => {
     let boardId: string;
@@ -337,6 +338,29 @@ describe("Task API", () => {
 
             expect(response.status).toBe(404);
             expect(response.body.success).toBe(false);
+        });
+    });
+
+    // --------------------------------------------------
+    // DATABASE LAYER
+    // --------------------------------------------------
+
+    describe("Task repository database queries", () => {
+        it("should return correct task counts per column directly from the database layer", async () => {
+            const result =
+                await taskRepository.countTasksPerColumn(
+                    boardId,
+                );
+
+            expect(result).toHaveLength(2);
+
+            expect(result[0].id).toBe(todoColumnId);
+            expect(result[0].name).toBe("Todo");
+            expect(result[0]._count.tasks).toBe(1);
+
+            expect(result[1].id).toBe(doneColumnId);
+            expect(result[1].name).toBe("Done");
+            expect(result[1]._count.tasks).toBe(1);
         });
     });
 

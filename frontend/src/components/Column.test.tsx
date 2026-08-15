@@ -99,6 +99,7 @@ describe("Column", () => {
         render(
             <Column
                 column={column}
+                columns={[]}
                 tasks={tasks}
                 onUpdated={vi.fn()}
             />,
@@ -119,6 +120,7 @@ describe("Column", () => {
         render(
             <Column
                 column={column}
+                columns={[]}
                 tasks={[]}
                 onUpdated={vi.fn()}
             />,
@@ -137,6 +139,7 @@ describe("Column", () => {
         render(
             <Column
                 column={column}
+                columns={[]}
                 tasks={tasks}
                 onUpdated={vi.fn()}
             />,
@@ -165,6 +168,7 @@ describe("Column", () => {
         render(
             <Column
                 column={column}
+                columns={[]}
                 tasks={[]}
                 onUpdated={vi.fn()}
             />,
@@ -193,6 +197,7 @@ describe("Column", () => {
         render(
             <Column
                 column={column}
+                columns={[]}
                 tasks={[]}
                 onUpdated={vi.fn()}
             />,
@@ -232,6 +237,7 @@ describe("Column", () => {
         render(
             <Column
                 column={column}
+                columns={[]}
                 tasks={[]}
                 onUpdated={onUpdated}
             />,

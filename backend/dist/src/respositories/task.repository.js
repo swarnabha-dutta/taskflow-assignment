@@ -28,6 +28,34 @@ export const taskRepository = {
             },
         });
     },
+    /**
+     * Returns every column of a board together with its task count.
+     * The count is calculated by Prisma at the database layer.
+     */
+    countTasksPerColumn(boardId) {
+        return prisma.column.findMany({
+            where: {
+                boardId,
+            },
+            select: {
+                id: true,
+                name: true,
+                position: true,
+                _count: {
+                    select: {
+                        tasks: true,
+                    },
+                },
+            },
+            orderBy: {
+                position: "asc",
+            },
+        });
+    },
+    /**
+     * Returns tasks with the requested priority,
+     * newest tasks first.
+     */
     findByPriority(priority) {
         return prisma.task.findMany({
             where: {
